@@ -1,16 +1,21 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/database.types";
 import { createClient } from "@/utils/supabase-browser";
 import { useRouter } from "next/navigation";
 
+interface ContextI {
+  supabase: SupabaseClient<Database>;
+  session?: Session | null;
+}
+
 type SupabaseContext = {
   supabase: SupabaseClient<Database>;
 };
 
-const Context = createContext<SupabaseContext | undefined>(undefined);
+const Context = createContext<ContextI | undefined>(undefined);
 
 export default function SupabaseProvider({
   serverSession,
@@ -21,6 +26,7 @@ export default function SupabaseProvider({
 }) {
   const [supabase] = useState(() => createClient());
   const router = useRouter();
+  const [session] = useState(serverSession);
 
   // Refresh the Page to Sync Server and Client
   useEffect(() => {
@@ -37,8 +43,12 @@ export default function SupabaseProvider({
     };
   }, [router, supabase, serverSession?.access_token]);
 
+  const exposed: ContextI = {
+    supabase,
+    session,
+  };
   return (
-    <Context.Provider value={{ supabase }}>
+    <Context.Provider value={exposed}>
       <>{children}</>
     </Context.Provider>
   );

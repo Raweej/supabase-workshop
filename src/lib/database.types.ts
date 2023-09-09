@@ -15,33 +15,24 @@ export interface Database {
           id: number
           profile_id: number | null
           title: string | null
-          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
           profile_id?: number | null
           title?: string | null
-          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
           profile_id?: number | null
           title?: string | null
-          user_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "post_profile_id_fkey"
             columns: ["profile_id"]
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]
@@ -88,7 +79,48 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_claim: {
+        Args: {
+          uid: string
+          claim: string
+        }
+        Returns: string
+      }
+      get_claim: {
+        Args: {
+          uid: string
+          claim: string
+        }
+        Returns: Json
+      }
+      get_claims: {
+        Args: {
+          uid: string
+        }
+        Returns: Json
+      }
+      get_my_claim: {
+        Args: {
+          claim: string
+        }
+        Returns: Json
+      }
+      get_my_claims: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      is_claims_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      set_claim: {
+        Args: {
+          uid: string
+          claim: string
+          value: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

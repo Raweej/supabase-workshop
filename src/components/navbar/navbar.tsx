@@ -4,10 +4,13 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useSupabase } from "../providers/supabase-provider";
 
 const Navbar = () => {
-  const supabase = createClientComponentClient<Database>();
+  const { supabase, session } = useSupabase();
+  console.log("session", session);
   const router = useRouter();
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push("/");
@@ -26,6 +29,7 @@ const Navbar = () => {
         <button onClick={handleSignIn} className="p-2 bg-gray-700">
           SignIn
         </button>
+
         <button onClick={handleSignOut} className="p-2 bg-gray-700">
           SignOut
         </button>
